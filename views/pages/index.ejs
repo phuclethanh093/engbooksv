@@ -4,6 +4,22 @@
   <% include ../partials/header.ejs %>
 </head>
 
+<script>
+  let dbclient = require('./lib/SQLiteHelperJS/objects/DatabaseClient');
+  let dbObj = require('./lib/SQLiteHelperJS/objects/DataObject');
+  dbclient.InitDatabase("phuctest3");
+
+  $(document).ready(function(){
+      dbclient.ExecuteQuery("SELECT * FROM users", function(result){
+          if(result.result == true){
+              dbObj = result.dataObject;
+              res.send('Hello Express ' + dbObj.GetRowData(0).username);
+          }
+      });
+  });
+
+</script>
+
 <body>
 
   <% include ../partials/nav.ejs %>
