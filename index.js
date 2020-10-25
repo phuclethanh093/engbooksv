@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
+const mvcCore = require('./lib/MViC/components/MVCCore');
 
 // let dbclient = require('./lib/SQLiteHelperJS/objects/DatabaseClient');
 // let dbObj = require('./lib/SQLiteHelperJS/objects/DataObject');
@@ -23,4 +24,12 @@ express()
     // });
     res.render('pages/index')
   })
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+  .listen(PORT, function(){
+    mvcCore.CurrentRootDir = __dirname;
+    mvcCore.ControllerPath = 'controllers';
+    mvcCore.InitControllers(function(res){
+      console.log(mvcCore.GetListControllers());
+      console.log(res.message);
+    });
+  });
+
