@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
 const mvcCore = require('./lib/MViC/components/MVCCore');
+const mvcRouterModule = require('./lib/MViC/components/MVCRouter');
 
 // let dbclient = require('./lib/SQLiteHelperJS/objects/DatabaseClient');
 // let dbObj = require('./lib/SQLiteHelperJS/objects/DataObject');
@@ -22,14 +23,19 @@ express()
     //     }
     //     // res.send('Hello Express');
     // });
-    res.render('pages/index')
+      console.log(req.url);
+      res.render('pages/index')
   })
   .listen(PORT, function(){
     mvcCore.CurrentRootDir = __dirname;
     mvcCore.ControllerPath = 'controllers';
     mvcCore.InitControllers(function(res){
-      console.log(mvcCore.GetListControllers());
-      console.log(res.message);
+      console.log(res);
+      if(res.result == true){
+        mvcRouterModule.SetHashMode(1, function(res2){
+          console.log(res2);
+        });
+      }
     });
   });
 
