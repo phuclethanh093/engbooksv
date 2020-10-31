@@ -23,19 +23,26 @@ express()
     //     }
     //     // res.send('Hello Express');
     // });
-      console.log(req.url);
-      res.render('pages/index')
+      mvcRouterModule.responseHttp = res;
+      mvcRouterModule.responseHttp.render('pages/index');
   })
   .listen(PORT, function(){
     mvcCore.CurrentRootDir = __dirname;
     mvcCore.ControllerPath = 'controllers';
     mvcCore.InitControllers(function(res){
-      console.log(res);
       if(res.result == true){
         mvcRouterModule.SetHashMode(1, function(res2){
-          console.log(res2);
         });
+        mvcRouterModule.requestHttp = express.request;
+        mvcRouterModule.responseHttp = express.response;
+
+        //Set route
+        // mvcCore.listMapRoute = {
+        //   "/Home" : mvcCore.GetListControllers[Home].Index,
+        // }
       }
     });
+
+    
   });
 
