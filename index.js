@@ -8,7 +8,7 @@ const mvcRouterModule = require('./lib/MViC/components/MVCRouter');
 // let dbObj = require('./lib/SQLiteHelperJS/objects/DataObject');
 // dbclient.InitDatabase("phuctest3");
 
-express()
+mvcCore.express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
