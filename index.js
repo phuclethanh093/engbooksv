@@ -1,5 +1,4 @@
-const express = require('express')
-const path = require('path')
+const path = require('path');
 const PORT = process.env.PORT || 5000
 const mvcCore = require('./lib/MViC/components/MVCCore');
 const mvcRouterModule = require('./lib/MViC/components/MVCRouter');
@@ -8,11 +7,12 @@ const mvcRouterModule = require('./lib/MViC/components/MVCRouter');
 // let dbObj = require('./lib/SQLiteHelperJS/objects/DataObject');
 // dbclient.InitDatabase("phuctest3");
 
-mvcCore.express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => 
+mvcCore.app.use(mvcCore.express.static(path.join(__dirname, 'public')));
+mvcCore.app.set('views', path.join(__dirname, 'views'));
+mvcCore.app.set('view engine', 'ejs');
+
+mvcCore.app
+  .get('*', (req, res) => 
   {
     // dbclient.ExecuteQuery("SELECT * FROM users", function(result){
     //     console.log(__dirname);
@@ -23,26 +23,22 @@ mvcCore.express()
     //     }
     //     // res.send('Hello Express');
     // });
-      mvcRouterModule.responseHttp = res;
-      mvcRouterModule.responseHttp.render('pages/index');
+    // var controllers = mvcCore.GetListControllers();
+    // controllers["home"].homepage;
+    // console.log(mvcCore.express());
+      console.log(req.originalUrl)
+      res.render("pages/index");
+      res.end();  
   })
   .listen(PORT, function(){
     mvcCore.CurrentRootDir = __dirname;
     mvcCore.ControllerPath = 'controllers';
+    mvcCore.ViewPath = __dirname + "/views";
     mvcCore.InitControllers(function(res){
       if(res.result == true){
-        mvcRouterModule.SetHashMode(1, function(res2){
+          mvcRouterModule.SetHashMode(1, function(res2){
         });
-        mvcRouterModule.requestHttp = express.request;
-        mvcRouterModule.responseHttp = express.response;
-
-        //Set route
-        // mvcCore.listMapRoute = {
-        //   "/Home" : mvcCore.GetListControllers[Home].Index,
-        // }
       }
     });
-
-    
   });
 
