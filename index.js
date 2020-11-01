@@ -10,7 +10,12 @@ const mvcRouterModule = require('./lib/MViC/components/MVCRouter');
 mvcCore.app.use(mvcCore.express.static(path.join(__dirname, 'public')));
 mvcCore.app.set('views', path.join(__dirname, 'views'));
 mvcCore.app.set('view engine', 'ejs');
-
+mvcCore.listMapRoute = {
+  "/home" : {
+    controllerName : "home",
+    action: "homepage"
+  }
+}
 mvcCore.app
   .get('*', (req, res) => 
   {
@@ -26,9 +31,21 @@ mvcCore.app
     // var controllers = mvcCore.GetListControllers();
     // controllers["home"].homepage;
     // console.log(mvcCore.express());
-      console.log(req.originalUrl)
-      res.render("pages/index");
-      res.end();  
+      var controllerStObj = mvcCore.listMapRoute[req.originalUrl];
+      if(controllerStObj == undefined){
+        res.status(404);
+        res.render('404', { url: req.url});
+        return;
+      }
+
+      var controllerName = controllerStObj.controllerName;
+      var action = controllerStObj.action;
+
+      var controllerObj = mvcCore.GetListControllers()[controllerName];
+      var instance = new controllerObj();
+      instance[action](function(result){
+        res.render(result.viewPath, {ViewData : result.ViewData});
+      });
   })
   .listen(PORT, function(){
     mvcCore.CurrentRootDir = __dirname;

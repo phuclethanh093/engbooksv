@@ -1,12 +1,22 @@
-const { render } = require('../lib/MViC/external_libs/express/lib/response');
+var routerModule = require('./../lib/MViC/components/MVCRouter');
 var baseController = require('./../lib/MViC/objects/BaseController');
-class home extends  baseController{
-    constructor(){
-        super();
-        this.hompage = function(){
-            console.log("test");
-            render("pages/index.ejs");
-        }
+// class home extends  baseController{
+//     constructor(){
+//         super();
+        
+//     }
+
+//     homepage(callback){
+//         render.render("/pages/")
+//         return;
+//     }   
+// }
+
+var home = function() {
+    baseController.call(this);
+    this.homepage = function(callback){
+        var res = routerModule.render("pages/index.ejs");
+        callback(res);
     }
 }
 
