@@ -14,48 +14,43 @@ mvcCore.listMapRoute = {
   "/home" : {
     controllerName : "home",
     action: "homepage"
-  }
+  },
 }
 mvcCore.app
   .get('*', (req, res) => 
   {
-    // dbclient.ExecuteQuery("SELECT * FROM users", function(result){
-    //     console.log(__dirname);
-    //     if(result.result == true){
-    //         dbObj = result.dataObject;
-    //         console.log(dbObj);
-    //         res.send('Hello Express ' + dbObj.GetRowData(0).username);
-    //     }
-    //     // res.send('Hello Express');
-    // });
-    // var controllers = mvcCore.GetListControllers();
-    // controllers["home"].homepage;
-    // console.log(mvcCore.express());
-      var controllerStObj = mvcCore.listMapRoute[req.originalUrl];
-      if(controllerStObj == undefined){
-        res.status(404);
-        res.render('404', { url: req.url});
-        return;
-      }
-
-      var controllerName = controllerStObj.controllerName;
-      var action = controllerStObj.action;
-
-      var controllerObj = mvcCore.GetListControllers()[controllerName];
-      var instance = new controllerObj();
-      instance[action](function(result){
-        res.render(result.viewPath, {ViewData : result.ViewData});
+      var mUrl = req.originalUrl;
+      mvcRouterModule.DecodeUrl(mUrl).then(function(result){
+        mUrl = result;
+        var controllerStObj = mvcCore.listMapRoute[mUrl];
+        if(controllerStObj == undefined){
+          res.status(404);
+          res.render('404', { url: req.url});
+          return;
+        }
+        
+        var controllerName = controllerStObj.controllerName;
+        var action = controllerStObj.action;
+        var controllerObj = mvcCore.GetListControllers()[controllerName];
+        var instance = new controllerObj();
+        
+        instance[action]().then(function(result){
+          res.render(result.viewPath, {ViewData : result.ViewData});
+        });
+      }, function(error){
+          res.status(404);
+          res.render('404', { url: req.url});
+          return;
       });
   })
   .listen(PORT, function(){
     mvcCore.CurrentRootDir = __dirname;
     mvcCore.ControllerPath = 'controllers';
     mvcCore.ViewPath = __dirname + "/views";
-    mvcCore.InitControllers(function(res){
-      if(res.result == true){
-          mvcRouterModule.SetHashMode(1, function(res2){
-        });
-      }
+    mvcCore.InitControllers().then(function(result){
+
+    }, function(error){
+
     });
   });
 

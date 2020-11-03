@@ -14,9 +14,10 @@ var baseController = require('./../lib/MViC/objects/BaseController');
 
 var home = function() {
     baseController.call(this);
-    this.homepage = function(callback){
-        var res = routerModule.render("pages/index.ejs");
-        callback(res);
+    this.homepage = function(){
+        return new Promise((resolve, reject) => {
+            resolve(routerModule.render("pages/index.ejs"));
+        });
     }
 }
 
