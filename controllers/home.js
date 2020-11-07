@@ -19,6 +19,12 @@ var home = function() {
             resolve(routerModule.render("pages/index.ejs"));
         });
     }
+
+    this.home2 = function(test, param = '2'){
+        return new Promise((resolve, reject) => {
+            resolve(routerModule.render("pages/index.ejs"));
+        });
+    }
 }
 
-module.exports = home
+module.exports = home;

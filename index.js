@@ -59,7 +59,7 @@ mvcCore.app.use(mvcCore.express.static(path.join(__dirname, 'public')));
     mvcCore.listMapRoute = {
       "/home" : {
         controllerName : "home",
-        action: "homepage"
+        action: "home2"
       },
     };
     mvcCore.CurrentRootDir = __dirname;
