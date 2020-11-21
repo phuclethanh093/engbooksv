@@ -1,6 +1,9 @@
+var Promise = require('bluebird');
 const { resolve, reject } = require('bluebird');
 var routerModule = require('./../lib/MViC/components/MVCRouter');
 var baseController = require('./../lib/MViC/objects/BaseController');
+
+
 
 var home = function() {
     baseController.call(this);
@@ -18,7 +21,13 @@ var home = function() {
 
     this.test = function(){
         return new Promise((resolve, reject) =>{
-           resolve({test : '1'}); 
+            var dbclient = require('./../lib/SQLiteHelperJS/objects/DatabaseClient');
+            dbclient.InitDatabase("phuctest3");
+            dbclient.ExecuteQuery("SELECT * FROM users").then(function(data){
+                resolve({test : data}); 
+            }, function(error){
+                reject();
+            })
         });
     }
 }
